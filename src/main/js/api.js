@@ -322,12 +322,4 @@ function GLOBALS() {
     globals = globals || GLOBAL_API().globals;
     return globals;
 }
-module.exports = {
-	GLOBAL_API: GLOBAL_API,
-	GLOBALS: GLOBALS,
-	API: API,
-	global_api: global_api,
-	api: api,
-	globals: globals,
-	jsonrpc: jsonrpc
-}
+
