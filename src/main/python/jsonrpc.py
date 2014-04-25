@@ -91,7 +91,16 @@ class JSONInternalError(JSONError):
 class JSONServerError(JSONError):
 	json_rpc_code = -32000
 
+registry = []
+class MetaClass(type):
+	def __new__(cls, clsname, bases, attrs):
+		global registry
+		newclass = super(MetaClass, cls).__new__(cls, clsname, bases, attrs)
+		registry.append(newclass)
+		return newclass
+
 class JSONRPC(object):
+	__metaclass__ = MetaClass
 	def __init__(self, *args, **kwargs):
 		global objects
 		objects[hash(self)] = self
@@ -203,6 +212,12 @@ class API(JSONRPC):
 		super(API, self).__init__()
 		object.__setattr__(self, "globals", Globals())
 		object.__setattr__(self, "api", api)
+	def interface(self):
+		global registry
+		o = {}
+		for cls in registry:
+			o[cls.__name__] = cls.__class_interface__()
+		return o
 	# so I can reference objects by hash if needed
 	def __getattr__(self, item):
 		global objects
@@ -443,19 +458,24 @@ def build_routes(api, sess=lambda:None):
 	api_obj = API(api)
 	@bottle.get('/api')
 	def api():
-		return api_obj.__jsoncall__(sess)
+		return api_obj.__interface__()
 	@bottle.get('/api/:objid')
 	def api(objid):
 		global objects
-		return objects[int(objid)].__jsoncall__(sess)
+		try:
+			return objects[int(objid)].__interface__()
+		except ValueError, e:
+			return resolve(api_obj, objid).__interface__()
 	@bottle.post('/api')
 	def api():
 		return api_obj.__jsoncall__(sess)
 	@bottle.post('/api/:objid')
 	def api(objid):
 		global objects
-		return objects[int(objid)].__jsoncall__(sess)
-
+		try:
+			return objects[int(objid)].__jsoncall__(sess)
+		except ValueError, e:
+			return resolve(api_obj, objid).__jsoncall__(sess)
 if __name__ == '__main__':
 	build_routes(APIObj())
 	@route('/')
