@@ -96,3 +96,11 @@ Similar to python, except the batch support is implemented slightly differently 
     }
     results == [JSONRPCCLIENT instance, "world", "hello world", null, "hello world"]
     // results are .val calls, in order, followed by regular function calls
+
+We can also make async calls with a callback
+
+    client.echo.async("hello world", function(result){
+      console.log(result);  // result is simply the return value from the function call
+    }
+    
+We can't however do async batch calls as I have yet to figure out how to pass the correct "this" around
