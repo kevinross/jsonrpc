@@ -1,5 +1,4 @@
-var prototype = require('prototype');
-var RemoteException = prototype.Class.create({
+var RemoteException = Class.create({
                                        initialize: function (exc, message) {
                                            this.exc = exc;
                                            this.message = message;
