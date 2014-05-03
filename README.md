@@ -60,7 +60,7 @@ Example for the former:
   
 Example for the latter:
 
-    interface Car { 
+    interface Car extends PythonMagic { // must extend PythonMagic
       public int id();
       public int cur_x();
       public int cur_y();
