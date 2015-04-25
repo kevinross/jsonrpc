@@ -276,7 +276,7 @@ class API(JSONRPC):
 			pass
 		if item in objects.keys():
 			return objects[item]
-		return object.__getattribute__(self, item)
+		return object.__getattribute__(self, str(item))
 
 	# don't want people (re-)defining things here
 	def __setattr__(self, key, value):
