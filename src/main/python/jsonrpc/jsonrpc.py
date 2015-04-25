@@ -171,7 +171,6 @@ class JSONRPC(object):
 	def __jsoncall__(self, sess=lambda: None):
 		try:
 			b = request.body.read(request.MEMFILE_MAX)
-			print b
 			json = bottle.json_lds(b)
 		except ValueError, e:
 			return JSONParseError(e)
