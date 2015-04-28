@@ -293,6 +293,8 @@ class RemoteException(Exception):
 
 
 def datetime_decoder(d):
+	if hasattr(d, '__json__'):
+		return d.__json__()
 	if isinstance(d, list):
 		pairs = enumerate(d)
 	elif isinstance(d, dict):
